@@ -1,9 +1,6 @@
 # attention
 minimal graphical music player
 
-# known issues
-- does not skip to the next track when the window is not being drawn, attention is therefore not conveniently usable at the moment
-
 # features
 - select a library of audio files
 - automatically play next song
