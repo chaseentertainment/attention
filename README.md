@@ -1,7 +1,7 @@
 # attention
 minimal graphical music player
 
-<img src="screenshots/image.png" width="400">
+<img src="screenshots/image.png" width="600">
 
 # known issues
 - some applications might refuse from working and complain about attention claiming audio streams exclusively for itself
