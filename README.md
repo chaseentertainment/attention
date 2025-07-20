@@ -1,6 +1,9 @@
 # attention
 minimal graphical music player
 
+# known issues
+- some applications might refuse from working and complain about attention claiming audio streams exclusively for itself
+
 # features
 - select a library of audio files
 - automatically play next song
