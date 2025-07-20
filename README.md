@@ -15,6 +15,9 @@ minimal graphical music player
 - skip and rewind the audio track
 - display title and artist tags
 
+# planned
+- discord rich presence integration that displays the title and artist name (contributions welcome)
+
 # build instructions
 - have cargo and rustc installed
 - run `cargo build --release`
