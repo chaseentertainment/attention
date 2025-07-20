@@ -13,6 +13,7 @@ pub struct Attention {
     queue_index: usize,
     playing: bool,
     cursor: u64,
+    volume: f32,
     config_file_path: PathBuf,
 }
 
@@ -37,6 +38,7 @@ impl Default for Attention {
             queue_index: 0,
             playing: false,
             cursor: 0,
+            volume: 1.0,
             config_file_path: dirs::home_dir()
                 .unwrap()
                 .join(".config/attention/attention.json"),
@@ -102,17 +104,22 @@ impl eframe::App for Attention {
                             self.play_track(self.queue_index + 1);
                         }
 
+                        ui.add(Label::new(RichText::new(track.artist).size(16.0)));
+                        ui.add(Label::new(track.title));
+
                         let duration_slider =
                             ui.add(Slider::new(&mut self.cursor, 0..=track.duration.as_secs()));
 
                         if duration_slider.dragged() {
                             self.sink.try_seek(Duration::from_secs(self.cursor)).ok();
                         }
-
-                        ui.add(Label::new(RichText::new(track.artist).size(16.0)));
-                        ui.add(Label::new(track.title));
                     }
                 });
+
+                ui.add(Slider::new(&mut self.volume, 0.0..=1.0).text("Volume"));
+                if self.volume != self.sink.volume() {
+                    self.sink.set_volume(self.volume);
+                }
 
                 ui.separator();
 

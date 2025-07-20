@@ -6,10 +6,11 @@ minimal graphical music player
 
 # features
 - select a library of audio files
-- automatically play next song
+- automatically play next song or skip manually
+- adjust the volume
 - start over when the queue is done
 - pause and resume playback
-- skip and rewind the track
+- skip and rewind the audio track
 - display title and artist tags
 
 # build instructions
