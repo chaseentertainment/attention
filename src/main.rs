@@ -8,7 +8,7 @@ fn main() {
     };
 
     eframe::run_native(
-        "Attention",
+        "attention",
         options,
         Box::new(|cc| {
             egui_extras::install_image_loaders(&cc.egui_ctx);

@@ -57,13 +57,13 @@ impl eframe::App for Attention {
         egui::CentralPanel::default().show(ctx, |ui| {
             self.cursor = self.sink.get_pos().as_secs();
 
-            ui.heading("Attention");
+            ui.heading("attention");
 
             ui.horizontal(|ui| {
                 let add_library_label = if self.library_path.is_none() {
-                    "Select library"
+                    "select library"
                 } else {
-                    "Change library"
+                    "change library"
                 };
 
                 if ui.button(add_library_label).clicked() {
@@ -274,7 +274,7 @@ impl Attention {
         let file = match fs::File::open(path) {
             Ok(f) => f,
             Err(e) => {
-                eprintln!("Failed to play audio file: {e}");
+                eprintln!("failed to play audio file: {e}");
                 return;
             }
         };
@@ -282,7 +282,7 @@ impl Attention {
         let source = match Decoder::try_from(file) {
             Ok(s) => s,
             Err(e) => {
-                eprintln!("Failed to decode audio file: {e}");
+                eprintln!("failed to decode audio file: {e}");
                 return;
             }
         };
