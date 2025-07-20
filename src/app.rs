@@ -218,6 +218,18 @@ impl Attention {
                 }
             };
 
+            let config_dir = match self.config_file_path.parent() {
+                Some(d) => d,
+                None => {
+                    eprintln!("unable to get config file directory");
+                    return;
+                }
+            };
+
+            if let Err(e) = fs::create_dir_all(config_dir) {
+                eprintln!("unable to create config file directory: {e}");
+            };
+
             let mut file = match fs::File::create(self.config_file_path.clone()) {
                 Ok(f) => f,
                 Err(e) => {
