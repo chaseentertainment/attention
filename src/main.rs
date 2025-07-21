@@ -1,5 +1,9 @@
 mod app;
+mod config;
+mod player;
 mod track;
+
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn main() {
     let options = eframe::NativeOptions {
@@ -8,12 +12,9 @@ fn main() {
     };
 
     eframe::run_native(
-        "attention",
+        &format!("attention v{VERSION}"),
         options,
-        Box::new(|cc| {
-            egui_extras::install_image_loaders(&cc.egui_ctx);
-            Ok(Box::<app::Attention>::default())
-        }),
+        Box::new(|_| Ok(Box::<app::Attention>::default())),
     )
     .expect("failed to launch app");
 }
