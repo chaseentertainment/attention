@@ -5,6 +5,7 @@ minimal graphical music player
 
 # known issues
 - some applications might refuse from working and complain about attention claiming audio streams exclusively for itself
+- i've observed that the player does not skip to the next song automatically when it's not in focus, but can't reproduce it reliably
 
 # features
 - select a library of audio files
@@ -14,9 +15,7 @@ minimal graphical music player
 - pause and resume playback
 - skip and rewind the audio track
 - display title and artist tags
-
-# planned
-- discord rich presence integration that displays the title and artist name (contributions welcome)
+- discord presence that shows title and artist name
 
 # build instructions
 - have cargo and rustc installed

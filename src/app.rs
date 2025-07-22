@@ -2,6 +2,7 @@ use crate::{
     config::{Config, load_config},
     player::Player,
 };
+use discord_rich_presence::DiscordIpc;
 use egui::{Label, RichText, Sense, Slider};
 
 pub struct Attention {
@@ -32,6 +33,12 @@ impl Default for Attention {
 }
 
 impl eframe::App for Attention {
+    fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
+        if let Some(client) = &mut self.player.discord {
+            client.close().ok();
+        }
+    }
+
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.request_repaint();
         self.player.update();

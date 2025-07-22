@@ -1,4 +1,8 @@
 use crate::track::Track;
+use discord_rich_presence::{
+    DiscordIpc, DiscordIpcClient,
+    activity::{Activity, ActivityType, Button},
+};
 use rodio::{Decoder, OutputStream, Sink};
 use std::{
     fs::{self, File},
@@ -16,6 +20,7 @@ pub struct Player {
     // playhead holds current timestamp in the track
     pub playhead: u64,
     pub volume: f32,
+    pub discord: Option<DiscordIpcClient>,
 }
 
 impl Default for Player {
@@ -25,6 +30,17 @@ impl Default for Player {
 
         let sink = rodio::Sink::connect_new(_stream_handle.mixer());
 
+        let discord = if let Ok(mut client) = DiscordIpcClient::new("1396555007951638770") {
+            match client.connect() {
+                Ok(c) => Some(c),
+                Err(_) => None,
+            };
+
+            Some(client)
+        } else {
+            None
+        };
+
         Self {
             _stream_handle,
             sink,
@@ -32,6 +48,7 @@ impl Default for Player {
             queue_index: 0,
             playhead: 0,
             volume: 1.0,
+            discord,
         }
     }
 }
@@ -139,6 +156,21 @@ impl Player {
         self.sink.append(source);
         self.sink.play();
         self.queue_index = index;
+
+        if let Some(client) = &mut self.discord {
+            if let Err(e) = client.set_activity(
+                Activity::new()
+                    .details(&track.artist)
+                    .state(&track.title)
+                    .buttons(vec![Button::new(
+                        "attention music player",
+                        "https://github.com/chasetripleseven/attention",
+                    )])
+                    .activity_type(ActivityType::Listening),
+            ) {
+                eprintln!("unable to set discord presence: {e}");
+            }
+        }
     }
 
     fn get_audio_source(track: &Track) -> anyhow::Result<Decoder<BufReader<File>>> {
