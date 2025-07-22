@@ -3,6 +3,9 @@ minimal graphical music player
 
 <img src="screenshots/image.png" width="600">
 
+# warning
+- attention is in its early stages and may present a lot of bugs
+
 # known issues
 - some applications might refuse from working and complain about attention claiming audio streams exclusively for itself
 - i've observed that the player does not skip to the next song automatically when it's not in focus, but can't reproduce it reliably
