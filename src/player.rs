@@ -1,7 +1,7 @@
 use crate::track::Track;
 use discord_rich_presence::{
     DiscordIpc, DiscordIpcClient,
-    activity::{Activity, ActivityType, Button},
+    activity::{Activity, ActivityType, Assets, Button},
 };
 use rodio::{Decoder, OutputStream, Sink};
 use std::{
@@ -10,6 +10,8 @@ use std::{
     path::PathBuf,
     time::Duration,
 };
+
+const DISCORD_PRESENCE_ICON_URL: &str = "https://cdn.discordapp.com/app-icons/1396555007951638770/a0c4fe39fc406b00b4cdd355e4532589.png?size=256";
 
 pub struct Player {
     _stream_handle: OutputStream,
@@ -156,8 +158,11 @@ impl Player {
         self.queue_index = index;
 
         if let Some(client) = &mut self.discord {
+            let assets = Assets::new().large_image(DISCORD_PRESENCE_ICON_URL);
+
             if let Err(e) = client.set_activity(
                 Activity::new()
+                    .assets(assets)
                     .details(&track.artist)
                     .state(&track.title)
                     .buttons(vec![Button::new(
