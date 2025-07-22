@@ -9,6 +9,7 @@ use anyhow::Error;
 #[derive(serde::Serialize, serde::Deserialize, Clone)]
 pub struct Config {
     pub library_path: Option<PathBuf>,
+    pub discord_presence: bool,
 }
 
 impl Config {
@@ -16,14 +17,22 @@ impl Config {
         if let Some(path) = rfd::FileDialog::new().pick_folder() {
             self.library_path = Some(path.clone());
 
-            if save_config(self).is_err() {
-                return None;
+            if let Err(e) = save_config(self) {
+                eprintln!("unable to load config file: {e}");
             };
 
             Some(path)
         } else {
             None
         }
+    }
+
+    pub fn set_discord_presence(&mut self, enabled: bool) {
+        self.discord_presence = enabled;
+
+        if let Err(e) = save_config(self) {
+            eprintln!("unable to save config: {e}");
+        };
     }
 }
 

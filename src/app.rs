@@ -3,7 +3,7 @@ use crate::{
     player::Player,
 };
 use discord_rich_presence::DiscordIpc;
-use egui::{Label, RichText, Sense, Slider};
+use egui::{Checkbox, Label, RichText, Sense, Slider};
 
 pub struct Attention {
     config: Config,
@@ -14,10 +14,13 @@ impl Default for Attention {
     fn default() -> Self {
         let config = match load_config() {
             Ok(c) => c,
-            Err(_) => Config { library_path: None },
+            Err(_) => Config {
+                library_path: None,
+                discord_presence: true,
+            },
         };
 
-        let mut player = Player::default();
+        let mut player = Player::new(config.discord_presence);
 
         if let Some(ref library) = config.library_path {
             player.load_library_into_queue(&library);
@@ -41,7 +44,10 @@ impl eframe::App for Attention {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.request_repaint();
-        self.player.update();
+
+        if self.player.playing() {
+            self.player.update();
+        }
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("attention");
@@ -103,6 +109,19 @@ impl eframe::App for Attention {
                 if self.player.volume != self.player.volume() {
                     self.player.set_volume(self.player.volume);
                 }
+
+                ui.horizontal(|ui| {
+                    if ui
+                        .add(Checkbox::new(
+                            &mut self.config.discord_presence,
+                            "discord presence (restart to apply)",
+                        ))
+                        .changed()
+                    {
+                        self.config
+                            .set_discord_presence(self.config.discord_presence);
+                    }
+                });
 
                 ui.separator();
 

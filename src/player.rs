@@ -23,8 +23,8 @@ pub struct Player {
     pub discord: Option<DiscordIpcClient>,
 }
 
-impl Default for Player {
-    fn default() -> Self {
+impl Player {
+    pub fn new(discord_presence: bool) -> Self {
         let _stream_handle =
             rodio::OutputStreamBuilder::open_default_stream().expect("open default audio stream");
 
@@ -48,12 +48,10 @@ impl Default for Player {
             queue_index: 0,
             playhead: 0,
             volume: 1.0,
-            discord,
+            discord: if discord_presence { discord } else { None },
         }
     }
-}
 
-impl Player {
     pub fn update(&mut self) {
         self.playhead = self.sink.get_pos().as_secs();
 
