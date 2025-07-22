@@ -44,10 +44,7 @@ impl eframe::App for Attention {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         ctx.request_repaint();
-
-        if self.player.playing() {
-            self.player.update();
-        }
+        self.player.update();
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("attention");
