@@ -32,15 +32,18 @@ impl Player {
 
         let sink = rodio::Sink::connect_new(_stream_handle.mixer());
 
-        let discord = if let Ok(mut client) = DiscordIpcClient::new("1396555007951638770") {
-            match client.connect() {
-                Ok(c) => Some(c),
-                Err(_) => None,
-            };
-
-            Some(client)
-        } else {
-            None
+        let discord = match DiscordIpcClient::new("1396555007951638770") {
+            Ok(mut client) => {
+                if client.connect().is_ok() {
+                    Some(client)
+                } else {
+                    None
+                }
+            }
+            Err(e) => {
+                eprintln!("unable to create discord ipc client: {e}");
+                None
+            }
         };
 
         Self {
@@ -61,8 +64,13 @@ impl Player {
             self.sink.set_volume(self.volume);
         }
 
-        if self.sink.empty() && self.can_next() {
-            self.next();
+        if self.sink.empty() {
+            if self.can_next() {
+                self.next();
+            } else {
+                self.queue_index = 0;
+                self.play_track(self.queue_index);
+            }
         }
     }
 

@@ -23,10 +23,10 @@ impl Default for Attention {
         let mut player = Player::new(config.discord_presence);
 
         if let Some(ref library) = config.library_path {
-            player.load_library_into_queue(&library);
+            player.load_library_into_queue(library);
         }
 
-        if player.queue.len() > 0 {
+        if !player.queue.is_empty() {
             player.play_track(player.queue_index);
             player.pause();
         }
